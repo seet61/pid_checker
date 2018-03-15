@@ -10,8 +10,8 @@ import time
 from service import find_syslog, Service
 from subprocess import Popen
 
-pid_file = '/var/tmp/pid'
-script = '/usr/bin/pix'
+pid_file = '/root/.bitcoinz/zcashd.pid'
+script = '/root/bitcoinz/src/zcashd'
 
 class MyService(Service):
     def __init__(self, *args, **kwargs):
@@ -25,11 +25,11 @@ class MyService(Service):
     def read_pid(self):
         with open(pid_file, 'r') as data:
             for line in data:
-                return line
+                return line[:-1]
 
     def main(self):
         pid = self.read_pid()
-        self.logger.info("pid: " + pid)
+        self.logger.info("pid: " + pid + " "  + str(os.path.exists("/proc/"+pid)))
         if (os.path.exists("/proc/"+pid) == False):
             self.logger.info('start service')
             p = Popen(script, shell=True)
