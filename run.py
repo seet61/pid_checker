@@ -17,12 +17,14 @@ script_service = 'service znomp restart'
 def read_pid():
     with open(pid_file, 'r') as data:
         for line in data:
-            return line[:-1]
+            return line.split('\n')[0]
 
 def main():
     pid = read_pid()
-    logging.basicConfig(filename=os.getcwd() +'checker.log', level=DEBUG, format='%(asctime)-15s %(levelname)s %(message)s')
+    #print pid
+    logging.basicConfig(filename=os.getcwd() +'/checker.log', level='DEBUG', format='%(asctime)-15s %(levelname)s %(message)s')
     logging.info("start")
+    #print os.path.exists("/proc/"+pid) == False
     if (os.path.exists("/proc/"+pid) == False):
         logging.info('start service')
         p = Popen(script, shell=True)
